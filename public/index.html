@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cache-Cache Géant</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--surface:#13131a;--surface2:#1c1c28;--accent:#ff3c5f;--accent2:#ffb800;--green:#00e676;--blue:#6495ed;--text:#f0f0ff;--muted:#6b6b88;--border:#2a2a3a;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Space Mono',monospace;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.4;}
+h1,h2,h3{font-family:'Syne',sans-serif;}
+.screen{display:none;min-height:100dvh;padding:24px 20px;animation:fadeIn .3s ease;}
+.screen.active{display:flex;flex-direction:column;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#screen-home{justify-content:center;align-items:center;text-align:center;gap:28px;}
+.logo-icon{font-size:72px;display:block;animation:pulse 2s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(255,60,95,.5));}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.logo-title{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1;margin-top:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.logo-sub{font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:6px;}
+.home-buttons{display:flex;flex-direction:column;gap:12px;width:100%;max-width:320px;}
+.btn{padding:14px 20px;border:none;border-radius:12px;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:1px;text-transform:uppercase;}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 24px rgba(255,60,95,.4);}
+.btn-primary:hover{transform:translateY(-2px);}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+.btn-secondary:hover{background:var(--surface);border-color:var(--accent);}
+.btn-success{background:var(--green);color:#000;font-weight:800;}
+.btn-success:hover{transform:translateY(-2px);}
+.btn-danger{background:transparent;color:var(--accent);border:1px solid var(--accent);}
+.btn-warn{background:var(--accent2);color:#000;font-weight:800;}
+.btn-blue{background:var(--blue);color:#fff;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:400px;}
+.form-title{font-size:20px;font-weight:800;margin-bottom:20px;}
+.form-group{margin-bottom:14px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+label{display:block;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+input,select{width:100%;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Space Mono',monospace;font-size:14px;outline:none;transition:border-color .2s;}
+input:focus,select:focus{border-color:var(--accent);}
+input::placeholder{color:var(--muted);}
+select option{background:var(--surface2);}
+.back-btn{background:none;border:none;color:var(--muted);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;gap:8px;transition:color .2s;}
+.back-btn:hover{color:var(--text);}
+.err-msg{color:var(--accent);font-size:12px;min-height:14px;margin-top:4px;}
+#screen-waiting{gap:16px;}
+.code-display{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px;text-align:center;}
+.code-label{font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;}
+.code-value{font-family:'Syne',sans-serif;font-size:44px;font-weight:800;letter-spacing:8px;color:var(--accent2);text-shadow:0 0 30px rgba(255,184,0,.4);}
+.code-hint{font-size:11px;color:var(--muted);margin-top:6px;}
+.players-list{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:18px;flex:1;overflow-y:auto;}
+.section-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.player-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.player-item:last-child{border-bottom:none;}
+.pdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.pname{font-size:14px;font-weight:700;}
+.prole{font-size:10px;color:var(--muted);margin-left:auto;}
+
+/* HIDDEN */
+#screen-hidden{justify-content:center;align-items:center;text-align:center;gap:16px;}
+.hidden-status{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 22px;width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.hidden-icon{font-size:52px;animation:breathe 3s ease-in-out infinite;}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.85}}
+.hidden-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}
+.hidden-phase{font-size:13px;color:var(--muted);line-height:1.6;}
+.countdown-big{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--accent2);}
+.progress-bar{width:100%;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width 1s linear;}
+.secret-box{background:var(--surface);border:1px dashed var(--border);border-radius:20px;padding:20px 22px;width:100%;max-width:320px;text-align:center;}
+.secret-label{font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;}
+.secret-code{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;letter-spacing:8px;color:var(--accent2);}
+.secret-hint{font-size:11px;color:var(--muted);margin-top:6px;}
+.found-log-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 18px;width:100%;max-width:320px;text-align:left;}
+.power-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 18px;width:100%;max-width:320px;}
+.power-title{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.power-btns{display:flex;flex-direction:column;gap:8px;}
+
+/* GAME */
+#screen-game{padding:0;position:relative;min-height:100dvh;}
+#map{width:100%;height:100dvh;position:fixed;top:0;left:0;z-index:0;}
+.game-top{position:fixed;top:0;left:0;right:0;z-index:100;pointer-events:none;background:linear-gradient(to bottom,rgba(10,10,15,.97) 60%,transparent);padding:14px 18px 36px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.game-title-small{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;}
+.phase-badge{padding:5px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.ph-hide{background:rgba(100,149,237,.2);color:var(--blue);border:1px solid var(--blue);}
+.ph-hidden{background:rgba(255,60,95,.2);color:var(--accent);border:1px solid var(--accent);}
+.ph-500{background:rgba(255,184,0,.2);color:var(--accent2);border:1px solid var(--accent2);}
+.ph-200{background:rgba(255,184,0,.3);color:var(--accent2);border:1px solid var(--accent2);}
+.ph-exact{background:rgba(0,230,118,.2);color:var(--green);border:1px solid var(--green);}
+.game-bottom{position:fixed;bottom:0;left:0;right:0;z-index:100;pointer-events:none;padding:10px 14px 20px;background:linear-gradient(to top,rgba(10,10,15,.97) 70%,transparent);display:flex;flex-direction:column;gap:8px;}
+.timer-bar{background:rgba(19,19,26,.95);border:1px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;pointer-events:auto;}
+.timer-display{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--accent2);min-width:68px;}
+.phase-rows{flex:1;display:flex;flex-direction:column;gap:2px;}
+.phase-row{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
+.phase-row.active{color:var(--text);font-weight:700;}
+.ph-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);flex-shrink:0;}
+.phase-row.active .ph-dot{background:var(--accent2);box-shadow:0 0 5px var(--accent2);}
+.sidebar{background:rgba(19,19,26,.95);border:1px solid var(--border);border-radius:14px;padding:10px 13px;pointer-events:auto;max-height:140px;overflow-y:auto;}
+.sidebar-title{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;}
+.sidebar-row{display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;}
+.sidebar-row:last-child{border:none;}
+.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.stag{margin-left:auto;font-size:10px;font-weight:400;color:var(--muted);}
+.tag-found{color:var(--accent);}
+.tag-seeker{color:var(--blue);}
+.tag-moved{color:var(--accent2);}
+.game-btns{display:flex;gap:8px;pointer-events:auto;}
+.game-btns .btn{flex:1;padding:12px;font-size:12px;}
+
+/* SABOTAGE PANEL */
+.sabotage-panel{background:rgba(19,19,26,.97);border:1px solid var(--border);border-radius:14px;padding:12px 14px;pointer-events:auto;display:none;flex-direction:column;gap:8px;}
+.sabotage-panel.open{display:flex;}
+
+/* FAKE MARKER MODE */
+.fake-hint{background:rgba(255,184,0,.15);border:1px solid var(--accent2);border-radius:14px;padding:10px 14px;font-size:12px;color:var(--accent2);pointer-events:auto;display:none;}
+.fake-hint.active{display:block;}
+
+/* END SCREEN */
+#screen-end{justify-content:center;align-items:center;text-align:center;gap:20px;padding:32px 20px;}
+.end-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 22px;width:100%;max-width:360px;}
+.end-icon{font-size:56px;margin-bottom:12px;}
+.end-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;margin-bottom:8px;}
+.end-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.end-list{text-align:left;display:flex;flex-direction:column;gap:8px;margin-top:16px;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:12px;animation:fadeIn .25s ease;}
+.modal-title{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;}
+.modal-btns{display:flex;gap:10px;}
+.modal-btns .btn{flex:1;padding:12px;}
+
+/* TOASTS */
+#toasts{position:fixed;top:14px;left:14px;right:14px;z-index:3000;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:11px 14px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:10px;animation:toastIn .3s ease;}
+@keyframes toastIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.toast.out{animation:toastOut .3s ease forwards;}
+@keyframes toastOut{to{opacity:0;transform:translateY(-8px)}}
+.toast-icon{font-size:18px;flex-shrink:0;}
+.conn-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:6px;transition:background .3s;}
+.conn-dot.ok{background:var(--green);box-shadow:0 0 6px var(--green);}
+.leaflet-popup-content-wrapper{background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;box-shadow:0 4px 20px rgba(0,0,0,.5);}
+.leaflet-popup-tip{background:var(--surface);}
+.leaflet-container{background:#0f0f18;}
+</style>
+</head>
+<body>
+<div id="toasts"></div>
+
+<!-- MODAL trouver -->
+<div class="modal-overlay" id="find-modal">
+  <div class="modal-box">
+    <h2 class="modal-title">Joueur trouvé ?</h2>
+    <p style="font-size:12px;color:var(--muted);line-height:1.6">Entre le code secret affiché sur l'écran du joueur trouvé.</p>
+    <div class="form-group" style="margin:0">
+      <label>Code secret (4 caractères)</label>
+      <input id="modal-code" type="text" maxlength="4" placeholder="A1B2"
+        style="text-transform:uppercase;text-align:center;font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:8px;">
+    </div>
+    <p class="err-msg" id="modal-err"></p>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-success" onclick="validateFound()">Valider ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="screen-home" class="screen active">
+  <div>
+    <span class="logo-icon">👁️</span>
+    <h1 class="logo-title">CACHE-CACHE</h1>
+    <p class="logo-sub">Géant · GPS · Paucourt</p>
+  </div>
+  <div style="font-size:12px;color:var(--muted);"><span class="conn-dot" id="conn-dot"></span><span id="conn-txt">Connexion…</span></div>
+  <div class="home-buttons">
+    <button class="btn btn-primary" onclick="show('screen-create')">🎯 Créer une partie</button>
+    <button class="btn btn-secondary" onclick="show('screen-join')">📍 Rejoindre une partie</button>
+  </div>
+</div>
+
+<!-- CREATE -->
+<div id="screen-create" class="screen" style="align-items:center;padding-top:40px;gap:0;">
+  <button class="back-btn" onclick="show('screen-home')">← Retour</button>
+  <div class="form-card">
+    <h2 class="form-title">Nouvelle partie</h2>
+    <div class="form-group">
+      <label>Ton prénom</label>
+      <input id="c-name" type="text" placeholder="Prénom" maxlength="20" autocomplete="off">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Durée totale (min)</label>
+        <input id="c-dur" type="number" value="45" min="10" max="120">
+      </div>
+      <div class="form-group">
+        <label>Cachette (min)</label>
+        <input id="c-hide" type="number" value="5" min="1" max="30">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Palier 1 → 2 (min)</label>
+        <input id="c-p1" type="number" value="10" min="1" max="60">
+      </div>
+      <div class="form-group">
+        <label>Palier 2 → 3 (min)</label>
+        <input id="c-p2" type="number" value="10" min="1" max="60">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Rayon palier 1 (m)</label>
+        <input id="c-r1" type="number" value="500" min="50" max="2000">
+      </div>
+      <div class="form-group">
+        <label>Rayon palier 2 (m)</label>
+        <input id="c-r2" type="number" value="200" min="20" max="1000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Rayon de jeu max (m)</label>
+      <input id="c-zone" type="number" value="1000" min="100" max="5000">
+    </div>
+    <p class="err-msg" id="c-err"></p>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="createGame()">Créer la partie →</button>
+  </div>
+</div>
+
+<!-- JOIN -->
+<div id="screen-join" class="screen" style="align-items:center;padding-top:48px;">
+  <button class="back-btn" onclick="show('screen-home')">← Retour</button>
+  <div class="form-card">
+    <h2 class="form-title">Rejoindre</h2>
+    <div class="form-group">
+      <label>Code de partie</label>
+      <input id="j-code" type="text" placeholder="ABCD12" maxlength="6" autocomplete="off"
+        style="text-transform:uppercase;text-align:center;letter-spacing:6px;font-size:22px;font-weight:700;">
+    </div>
+    <div class="form-group">
+      <label>Ton prénom</label>
+      <input id="j-name" type="text" placeholder="Prénom" maxlength="20" autocomplete="off">
+    </div>
+    <p class="err-msg" id="j-err"></p>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="joinGame()">Rejoindre →</button>
+  </div>
+</div>
+
+<!-- WAITING -->
+<div id="screen-waiting" class="screen">
+  <button class="back-btn" onclick="leaveGame()">← Quitter</button>
+  <div class="code-display">
+    <p class="code-label">Code de la partie</p>
+    <p class="code-value" id="d-code">------</p>
+    <p class="code-hint">Partage ce code aux joueurs cachés</p>
+  </div>
+  <div class="players-list">
+    <p class="section-label">Joueurs connectés · <span id="d-count">0</span></p>
+    <div id="d-players"></div>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;font-size:12px;color:var(--muted);line-height:1.8;" id="d-settings-summary"></div>
+  <button class="btn btn-success" id="d-start" onclick="startGame()" disabled>En attente de joueurs…</button>
+</div>
+
+<!-- HIDDEN -->
+<div id="screen-hidden" class="screen">
+  <div class="hidden-status">
+    <div class="hidden-icon" id="h-icon">🙈</div>
+    <h2 class="hidden-title" id="h-title">Cache-toi !</h2>
+    <div class="countdown-big" id="h-countdown" style="display:none"></div>
+    <p class="hidden-phase" id="h-phase">La partie va commencer…</p>
+    <div class="progress-bar"><div class="progress-fill" id="h-prog" style="width:0%"></div></div>
+  </div>
+  <div class="secret-box">
+    <p class="secret-label">Ton code secret</p>
+    <p class="secret-code" id="h-secret">----</p>
+    <p class="secret-hint">Montre ce code si le chercheur te trouve</p>
+  </div>
+  <div class="power-box" id="h-power-box">
+    <p class="power-title">⚡ Ton pouvoir (1 utilisation)</p>
+    <div class="power-btns">
+      <button class="btn btn-warn" id="btn-power-hide" onclick="usePower('hide')">🫥 Masquer ma position (1 min)</button>
+      <button class="btn btn-danger" id="btn-power-fake" onclick="startFakePlacement()">📍 Placer une fausse position</button>
+    </div>
+  </div>
+  <div class="found-log-box" id="h-found-log" style="display:none;">
+    <p class="section-label" style="margin-bottom:8px;">Joueurs trouvés</p>
+    <div id="h-found-items"></div>
+  </div>
+  <button class="btn btn-danger" onclick="leaveGame()">Quitter la partie</button>
+</div>
+
+<!-- GAME (chercheur) -->
+<div id="screen-game" class="screen">
+  <div id="map"></div>
+  <div class="game-top">
+    <span class="game-title-small" id="g-role">👁️ CHERCHEUR</span>
+    <span class="phase-badge ph-hidden" id="g-badge">Attente…</span>
+  </div>
+  <div class="game-bottom">
+    <div class="sabotage-panel" id="sabotage-panel">
+      <p style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;">⚡ Choisir ton sabotage</p>
+      <button class="btn btn-primary" style="font-size:11px;padding:10px" onclick="doSabotage('reveal')">👁️ Voir positions exactes 30 sec</button>
+      <button class="btn btn-warn" style="font-size:11px;padding:10px" onclick="doSabotage('halve')">🔍 Réduire rayons de moitié 1 min</button>
+      <button class="btn btn-blue" style="font-size:11px;padding:10px" onclick="doSabotage('block')">🔒 Bloquer pouvoirs des cachés 2 min</button>
+      <button class="btn btn-secondary" style="font-size:11px;padding:10px" onclick="closeSabotage()">Annuler</button>
+    </div>
+    <div class="fake-hint" id="fake-hint">📍 Appuie sur la carte pour placer une fausse position<br><small>Appuie n'importe où sur la carte</small></div>
+    <div class="sidebar">
+      <p class="sidebar-title">Joueurs</p>
+      <div id="g-sidebar-list"></div>
+    </div>
+    <div class="timer-bar">
+      <div class="timer-display" id="g-timer">00:00</div>
+      <div class="phase-rows" id="g-phase-rows"></div>
+    </div>
+    <div class="game-btns">
+      <button class="btn btn-primary" onclick="openModal()">J'ai trouvé quelqu'un !</button>
+      <button class="btn btn-warn" id="btn-sabotage" onclick="openSabotage()">⚡ Sabotage</button>
+    </div>
+  </div>
+</div>
+
+<!-- END -->
+<div id="screen-end" class="screen">
+  <div class="end-card">
+    <div class="end-icon" id="end-icon">🏆</div>
+    <h2 class="end-title" id="end-title">Partie terminée !</h2>
+    <p class="end-sub" id="end-sub"></p>
+    <div class="end-list" id="end-list"></div>
+  </div>
+  <button class="btn btn-primary" onclick="leaveGame()">Retour à l'accueil</button>
+</div>
+
+<script>
+var PALETTE=['#ff3c5f','#ffb800','#00e676','#6495ed','#ff6ec7','#00d4ff','#ff8c00','#b39dff','#69ff47','#ff9f40'];
+var playerColors={},colorIdx=0;
+function playerColor(n){ if(!playerColors[n]) playerColors[n]=PALETTE[colorIdx++%PALETTE.length]; return playerColors[n]; }
+
+var S={
+  code:null,name:null,isSeeker:false,startTime:null,settings:null,
+  watchId:null,timerPoll:null,playerKey:null,secretCode:null,
+  becameSeeker:false,powerUsed:false,powerBlocked:false,powerBlockedUntil:null,
+  map:null,selfMarker:null,zoneCircle:null,playerMarkers:{},playerCircles:{},fakeMarkers:{},
+  sabotageUsed:false,fakePlacing:false,fakeClickHandler:null,
+  revealUntil:null,halveUntil:null,
+  lastPlayers:{}
+};
+
+var ws=null;
+
+function connectWS(){
+  var proto=location.protocol==='https:'?'wss':'ws';
+  ws=new WebSocket(proto+'://'+location.host);
+  ws.onopen=function(){ setConn(true); };
+  ws.onclose=function(){ setConn(false); setTimeout(connectWS,2000); };
+  ws.onerror=function(){};
+  ws.onmessage=function(e){
+    var msg; try{ msg=JSON.parse(e.data); }catch(ex){ return; }
+    if(msg.type==='error'){ toast(msg.msg,'❌'); return; }
+    if(msg.type==='created'){ /* ok */ }
+    if(msg.type==='joined'||msg.type==='rejoined'){
+      if(msg.type==='rejoined'){ S.playerKey=msg.playerKey; S.secretCode=msg.secretCode; document.getElementById('h-secret').textContent=msg.secretCode||'----'; }
+      onGameState(msg.game);
+    }
+    if(msg.type==='game_state'){ onGameState(msg.game); }
+    if(msg.type==='positions'){ onPositions(msg.players, msg.centerLat, msg.centerLng); }
+    if(msg.type==='found_announce'){
+      var col=playerColor(msg.name);
+      toast('<span style="color:'+col+';font-weight:700">'+msg.name+'</span> a été trouvé(e) ! Il·Elle devient chercheur.','🎯');
+    }
+    if(msg.type==='power_announce'){ onPowerAnnounce(msg); }
+    if(msg.type==='sabotage'){ onSabotage(msg); }
+    if(msg.type==='game_end'){ onGameEnd(msg); }
+    if(msg.type==='power_ok'){ onPowerOk(msg); }
+  };
+}
+function send(obj){ if(ws&&ws.readyState===1) ws.send(JSON.stringify(obj)); }
+function setConn(ok){
+  document.getElementById('conn-dot').className='conn-dot'+(ok?' ok':'');
+  document.getElementById('conn-txt').textContent=ok?'Connecté':'Déconnecté — reconnexion…';
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  if(id==='screen-game'&&S.map) setTimeout(function(){ S.map.invalidateSize(); },100);
+}
+function showErr(id,msg){ var el=document.getElementById(id); if(!el) return; el.textContent=msg; setTimeout(function(){ el.textContent=''; },3000); }
+function toast(msg,emoji){
+  var t=document.createElement('div'); t.className='toast';
+  t.innerHTML='<span class="toast-icon">'+(emoji||'ℹ️')+'</span><span>'+msg+'</span>';
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(function(){ t.classList.add('out'); setTimeout(function(){ t.remove(); },350); },5000);
+}
+function genCode(n){ var a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=''; for(var i=0;i<n;i++) r+=a[Math.floor(Math.random()*a.length)]; return r; }
+
+// ── CREATE ────────────────────────────────────────
+function createGame(){
+  var name=document.getElementById('c-name').value.trim();
+  if(!name){ showErr('c-err','Entre ton prénom !'); return; }
+  if(!ws||ws.readyState!==1){ showErr('c-err','Pas connecté au serveur'); return; }
+  var settings={
+    dur:parseInt(document.getElementById('c-dur').value)||45,
+    hideTime:parseInt(document.getElementById('c-hide').value)||5,
+    p1:parseInt(document.getElementById('c-p1').value)||10,
+    p2:parseInt(document.getElementById('c-p2').value)||10,
+    r1:parseInt(document.getElementById('c-r1').value)||500,
+    r2:parseInt(document.getElementById('c-r2').value)||200,
+    zone:parseInt(document.getElementById('c-zone').value)||1000
+  };
+  var code=genCode(6); playerColor(name);
+  S.code=code; S.name=name; S.isSeeker=true; S.settings=settings;
+  S.playerKey=name+'_seeker';
+  document.getElementById('d-code').textContent=code;
+  renderSettingsSummary(settings);
+  send({ type:'create', code:code, settings:settings, name:name, playerKey:S.playerKey });
+  show('screen-waiting');
+}
+
+function renderSettingsSummary(s){
+  document.getElementById('d-settings-summary').innerHTML=
+    '⏱ Durée : '+s.dur+' min &nbsp;·&nbsp; 🙈 Cachette : '+s.hideTime+' min<br>'
+    +'📍 Palier 1 : '+s.r1+'m après '+s.hideTime+'min &nbsp;·&nbsp; Palier 2 : '+s.r2+'m + '+s.p1+'min<br>'
+    +'🗺️ Zone max : '+s.zone+'m';
+}
+
+// ── JOIN ──────────────────────────────────────────
+function joinGame(){
+  var code=document.getElementById('j-code').value.trim().toUpperCase();
+  var name=document.getElementById('j-name').value.trim();
+  if(code.length!==6){ showErr('j-err','Code invalide (6 caractères)'); return; }
+  if(!name){ showErr('j-err','Entre ton prénom !'); return; }
+  if(!ws||ws.readyState!==1){ showErr('j-err','Pas connecté au serveur'); return; }
+  var secret=genCode(4), key=name+'_'+Date.now();
+  playerColor(name);
+  S.code=code; S.name=name; S.isSeeker=false; S.playerKey=key; S.secretCode=secret;
+  document.getElementById('h-secret').textContent=secret;
+  send({ type:'join', code:code, name:name, playerKey:key, secretCode:secret });
+  show('screen-hidden');
+  startGPS();
+  startHiddenLoop();
+}
+
+// ── GAME STATE ────────────────────────────────────
+function onGameState(g){
+  if(!g) return;
+  S.lastPlayers=g.players||{};
+  S.settings=g.settings||S.settings;
+  Object.values(g.players||{}).forEach(function(p){ playerColor(p.name); });
+
+  if(g.status==='ended'){ onGameEnd({ reason: g.endReason, players: g.players, foundLog: g.foundLog }); return; }
+
+  if(g.status==='waiting'){
+    renderWait(g); return;
+  }
+
+  S.startTime=g.startTime;
+
+  // Caché trouvé → devient chercheur
+  if(S.playerKey&&g.players[S.playerKey]&&g.players[S.playerKey].isFound&&!S.becameSeeker){
+    S.becameSeeker=true;
+    toast('Tu as été trouvé(e) ! Tu deviens chercheur 👁️','🎯');
+    setTimeout(function(){ S.isSeeker=true; show('screen-game'); initMap(); startGameLoop(); },2000);
+    return;
+  }
+
+  if(S.isSeeker){
+    buildPhaseRows();
+    renderSidebarFromPlayers(g.players);
+    renderFoundLog(g.foundLog);
+  } else {
+    renderHiddenPhase();
+    renderFoundLog(g.foundLog);
+    // Partie lancée mais on était en waiting
+    if(document.getElementById('screen-hidden').classList.contains('active')&&!S.startTime){
+      S.startTime=g.startTime;
+    }
+  }
+}
+
+function onPositions(players, cLat, cLng){
+  S.lastPlayers=players;
+  if(S.isSeeker&&S.map){
+    var min=(Date.now()-S.startTime)/60000;
+    updateMarkers(players, getPhase(min));
+    renderSidebarFromPlayers(players);
+  }
+}
+
+// ── WAITING ───────────────────────────────────────
+function renderWait(g){
+  var pl=Object.values(g.players||{});
+  document.getElementById('d-count').textContent=pl.length;
+  var list=document.getElementById('d-players'); list.innerHTML='';
+  pl.forEach(function(p){
+    var col=playerColor(p.name), d=document.createElement('div'); d.className='player-item';
+    d.innerHTML='<div class="pdot" style="background:'+col+';box-shadow:0 0 7px '+col+'80"></div>'
+      +'<span class="pname" style="color:'+col+'">'+p.name+'</span>'
+      +'<span class="prole">'+(p.isSeeker?'👁️ Chercheur':'🙈 Caché')+'</span>';
+    list.appendChild(d);
+  });
+  if(g.settings) renderSettingsSummary(g.settings);
+  var hidden=pl.filter(function(p){ return !p.isSeeker; }).length;
+  var btn=document.getElementById('d-start');
+  btn.disabled=hidden<1;
+  btn.textContent=hidden<1?'En attente de joueurs…':'Lancer avec '+hidden+' caché'+(hidden>1?'s':'')+' →';
+}
+
+function startGame(){
+  var centerLat=null, centerLng=null;
+  if(S.map&&navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(p){
+      centerLat=p.coords.latitude; centerLng=p.coords.longitude;
+      send({ type:'start', code:S.code, centerLat:centerLat, centerLng:centerLng });
+    }, function(){ send({ type:'start', code:S.code }); });
+  } else {
+    send({ type:'start', code:S.code });
+  }
+  show('screen-game');
+  initMap();
+  startGameLoop();
+}
+
+// ── HIDDEN LOOP ───────────────────────────────────
+function startHiddenLoop(){
+  renderHiddenPhase();
+  S.timerPoll=setInterval(renderHiddenPhase,1000);
+}
+
+function renderHiddenPhase(){
+  if(!S.startTime){
+    document.getElementById('h-title').textContent='Attends le signal !';
+    document.getElementById('h-phase').textContent='Le chercheur va lancer la partie…';
+    document.getElementById('h-countdown').style.display='none';
+    return;
+  }
+  var s=S.settings||{dur:45,hideTime:5,p1:10,p2:10};
+  var elapsed=(Date.now()-S.startTime)/1000; // secondes
+  var hideTimeSec=s.hideTime*60;
+  var totalSec=s.dur*60;
+  var pct=Math.min((elapsed/totalSec)*100,100);
+  document.getElementById('h-prog').style.width=pct+'%';
+
+  var icon,title,phase,showCountdown=false;
+
+  if(elapsed<hideTimeSec){
+    // Phase cachette : compte à rebours
+    var remaining=Math.ceil(hideTimeSec-elapsed);
+    icon='🏃'; title='COURS TE CACHER !'; showCountdown=true;
+    document.getElementById('h-countdown').textContent=formatTime(remaining);
+    phase='Reste immobile quand le chrono atteint 0 !';
+    document.getElementById('h-phase').style.color='var(--accent2)';
+  } else if(elapsed<hideTimeSec+(s.p1*60)){
+    icon='🙈'; title='Tu es invisible !';
+    phase='Zone '+s.r1+'m dans '+ Math.ceil(s.p1-(elapsed-hideTimeSec)/60)+' min';
+    document.getElementById('h-phase').style.color='';
+  } else if(elapsed<hideTimeSec+(s.p1+s.p2)*60){
+    icon='😬'; title='Zone ~'+s.r1+'m visible…';
+    phase='Zone '+s.r2+'m dans '+Math.ceil(s.p2-(elapsed-hideTimeSec-s.p1*60)/60)+' min';
+    document.getElementById('h-phase').style.color='';
+  } else {
+    icon='🚨'; title='POSITION EXACTE !'; phase='Le chercheur te voit ! Reste IMMOBILE !';
+    document.getElementById('h-phase').style.color='var(--accent)';
+  }
+
+  document.getElementById('h-icon').textContent=icon;
+  document.getElementById('h-title').textContent=title;
+  document.getElementById('h-phase').textContent=phase;
+  document.getElementById('h-countdown').style.display=showCountdown?'block':'none';
+
+  // Alerte déplacement
+  if(elapsed>hideTimeSec){
+    var me=S.lastPlayers[S.playerKey];
+    if(me&&me.moved){
+      document.getElementById('h-phase').textContent='⚠️ Tu t\'es déplacé(e) ! Rayon réduit en pénalité !';
+      document.getElementById('h-phase').style.color='var(--accent)';
+    }
+  }
+}
+
+function renderFoundLog(log){
+  log=log||[];
+  var card=document.getElementById('h-found-log'), items=document.getElementById('h-found-items');
+  if(!log.length){ card.style.display='none'; return; }
+  card.style.display='block'; items.innerHTML='';
+  log.forEach(function(f){
+    var col=playerColor(f.name), d=document.createElement('div'); d.className='player-item';
+    d.innerHTML='<div class="pdot" style="background:'+col+'"></div>'
+      +'<span class="pname" style="color:'+col+'">'+f.name+'</span>'
+      +'<span class="prole">Trouvé · Chercheur</span>';
+    items.appendChild(d);
+  });
+}
+
+// ── GPS ───────────────────────────────────────────
+function startGPS(){
+  if(!navigator.geolocation) return;
+  S.watchId=navigator.geolocation.watchPosition(
+    function(p){
+      S.myLat=p.coords.latitude; S.myLng=p.coords.longitude;
+      updateSelfMarker();
+      send({ type:'position', code:S.code, playerKey:S.playerKey, lat:S.myLat, lng:S.myLng });
+    },
+    function(){},
+    { enableHighAccuracy:true, maximumAge:0, timeout:10000 }
+  );
+}
+
+function updateSelfMarker(){
+  if(!S.map||!S.myLat) return;
+  var col=playerColor(S.name);
+  if(!S.selfMarker){
+    S.selfMarker=L.circleMarker([S.myLat,S.myLng],{ radius:10,color:'#fff',weight:2,fillColor:col,fillOpacity:1 })
+      .addTo(S.map).bindPopup('<b style="color:'+col+'">'+S.name+'</b> (moi)');
+    S.map.setView([S.myLat,S.myLng],16);
+  } else { S.selfMarker.setLatLng([S.myLat,S.myLng]); }
+}
+
+// ── MAP ───────────────────────────────────────────
+var PAU={ lat:48.0398, lng:2.78692 };
+
+function initMap(){
+  if(S.map){ S.map.remove(); S.map=null; S.selfMarker=null; S.zoneCircle=null; S.playerMarkers={}; S.playerCircles={}; S.fakeMarkers={}; }
+  S.map=L.map('map',{ center:[PAU.lat,PAU.lng], zoom:15, zoomControl:false });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{ attribution:'© OpenStreetMap', maxZoom:19 }).addTo(S.map);
+  L.control.zoom({ position:'topright' }).addTo(S.map);
+  startGPS();
+}
+
+function drawZoneCircle(lat,lng){
+  if(!S.map||!S.settings) return;
+  if(S.zoneCircle){ S.map.removeLayer(S.zoneCircle); }
+  S.zoneCircle=L.circle([lat,lng],{
+    radius:S.settings.zone, color:'#6495ed', fillColor:'#6495ed',
+    fillOpacity:0.05, weight:2, dashArray:'8 4'
+  }).addTo(S.map);
+}
+
+// ── GAME LOOP ─────────────────────────────────────
+function getPhase(min){
+  if(!S.settings) return 0;
+  var s=S.settings;
+  var hideMin=s.hideTime;
+  if(min<hideMin) return -1; // phase cachette
+  var elapsed=min-hideMin;
+  if(elapsed<s.p1) return 0;
+  if(elapsed<s.p1+s.p2) return 1;
+  return 2;
+}
+
+function buildPhaseRows(){
+  if(!S.settings) return;
+  var s=S.settings;
+  var rows=document.getElementById('g-phase-rows');
+  rows.innerHTML=
+    '<div class="phase-row" id="pr-1"><div class="ph-dot"></div><span>0–'+s.hideTime+' min · Cachette</span></div>'
+    +'<div class="phase-row" id="pr0"><div class="ph-dot"></div><span>'+s.hideTime+'–'+(s.hideTime+s.p1)+' min · Masqué</span></div>'
+    +'<div class="phase-row" id="pr1"><div class="ph-dot"></div><span>+'+(s.hideTime+s.p1)+' min · Zone ~'+s.r1+' m</span></div>'
+    +'<div class="phase-row" id="pr2"><div class="ph-dot"></div><span>+'+(s.hideTime+s.p1+s.p2)+' min · Zone ~'+s.r2+' m</span></div>'
+    +'<div class="phase-row" id="pr3"><div class="ph-dot"></div><span>Position exacte</span></div>';
+}
+
+function startGameLoop(){
+  buildPhaseRows();
+  tickUI();
+  S.timerPoll=setInterval(tickUI,1000);
+}
+
+function tickUI(){
+  if(!S.startTime) return;
+  var el=Date.now()-S.startTime, min=el/60000, phase=getPhase(min);
+  var m=Math.floor(el/60000).toString().padStart(2,'0');
+  var sec=Math.floor((el%60000)/1000).toString().padStart(2,'0');
+  document.getElementById('g-timer').textContent=m+':'+sec;
+  var labels={'-1':'Cachette','0':'Masqué','1':'Zone ~'+((S.settings||{}).r1||500)+' m','2':'Zone ~'+((S.settings||{}).r2||200)+' m','3':'Position exacte'};
+  var cls={'-1':'ph-hide','0':'ph-hidden','1':'ph-500','2':'ph-200','3':'ph-exact'};
+  var badge=document.getElementById('g-badge');
+  badge.textContent=labels[phase]||''; badge.className='phase-badge '+(cls[phase]||'ph-hidden');
+  ['-1','0','1','2','3'].forEach(function(i){
+    var el2=document.getElementById('pr'+i); if(!el2) return;
+    el2.className='phase-row'+(String(phase)===i?' active':'');
+  });
+}
+
+function renderSidebarFromPlayers(players){
+  var pl=Object.values(players||{});
+  var list=document.getElementById('g-sidebar-list'); list.innerHTML='';
+  var hidden=pl.filter(function(p){ return !p.isSeeker&&!p.isFound; });
+  var seekers=pl.filter(function(p){ return p.isSeeker&&!p.isFound; });
+  var found=pl.filter(function(p){ return p.isFound; });
+  hidden.concat(seekers).concat(found).forEach(function(p){
+    if(p.isSeeker&&p.name===S.name&&!p.isFound) return;
+    var col=playerColor(p.name), d=document.createElement('div'); d.className='sidebar-row';
+    var tag=p.isFound?'<span class="stag tag-found">Trouvé · 👁️</span>'
+      :p.isSeeker?'<span class="stag tag-seeker">Chercheur</span>'
+      :p.moved?'<span class="stag tag-moved">⚠️ Bougé</span>'
+      :'<span class="stag">Caché</span>';
+    d.innerHTML='<div class="sdot" style="background:'+col+';box-shadow:0 0 5px '+col+'60"></div>'
+      +'<span style="color:'+col+'">'+p.name+'</span>'+tag;
+    list.appendChild(d);
+  });
+}
+
+function rndOffset(maxDeg){ var a=Math.random()*2*Math.PI,r=Math.random()*maxDeg; return {lat:Math.sin(a)*r,lng:Math.cos(a)*r}; }
+
+function updateMarkers(players, phase){
+  if(!S.map) return;
+  var s=S.settings||{r1:500,r2:200};
+  var reveal=S.revealUntil&&Date.now()<S.revealUntil;
+  var halve=S.halveUntil&&Date.now()<S.halveUntil;
+
+  Object.values(players||{}).forEach(function(p){
+    var col=playerColor(p.name);
+    if(p.isSeeker||p.isFound){
+      if(S.playerCircles[p.name]){ S.map.removeLayer(S.playerCircles[p.name]); delete S.playerCircles[p.name]; }
+      if(S.playerMarkers[p.name]){ S.map.removeLayer(S.playerMarkers[p.name]); delete S.playerMarkers[p.name]; }
+      if(S.fakeMarkers[p.name]){ S.map.removeLayer(S.fakeMarkers[p.name]); delete S.fakeMarkers[p.name]; }
+      return;
+    }
+    if(!p.lat||!p.lng) return;
+
+    // Fausse position
+    if(p.fakeMarker){
+      if(!S.fakeMarkers[p.name]){
+        S.fakeMarkers[p.name]=L.circle([p.fakeMarker.lat,p.fakeMarker.lng],{
+          radius:200, color:'#ff3c5f', fillColor:'#ff3c5f', fillOpacity:0.15, weight:2, dashArray:'4 4'
+        }).addTo(S.map).bindPopup('<b style="color:#ff3c5f">FAUSSE position — '+p.name+'</b>');
+      }
+    }
+
+    // Position masquée et pas reveal
+    if((phase===0||phase===-1)&&!reveal){
+      if(S.playerCircles[p.name]){ S.map.removeLayer(S.playerCircles[p.name]); delete S.playerCircles[p.name]; }
+      if(S.playerMarkers[p.name]){ S.map.removeLayer(S.playerMarkers[p.name]); delete S.playerMarkers[p.name]; }
+      return;
+    }
+
+    // Caché (hidden pouvoir actif)
+    if(p.hidden&&!reveal){
+      if(S.playerCircles[p.name]){ S.map.removeLayer(S.playerCircles[p.name]); delete S.playerCircles[p.name]; }
+      if(S.playerMarkers[p.name]){ S.map.removeLayer(S.playerMarkers[p.name]); delete S.playerMarkers[p.name]; }
+      return;
+    }
+
+    // Position exacte (phase 3 ou reveal)
+    if(phase===3||reveal){
+      if(S.playerCircles[p.name]){ S.map.removeLayer(S.playerCircles[p.name]); delete S.playerCircles[p.name]; }
+      if(!S.playerMarkers[p.name]){
+        S.playerMarkers[p.name]=L.circleMarker([p.lat,p.lng],{
+          radius:11,color:'#fff',weight:2,fillColor:col,fillOpacity:0.95
+        }).addTo(S.map).bindPopup('<b style="color:'+col+'">'+p.name+'</b><br><small>Position exacte'+(reveal?' (SABOTAGE)':'')+'</small>');
+      } else { S.playerMarkers[p.name].setLatLng([p.lat,p.lng]); }
+      return;
+    }
+
+    // Cercle flou
+    if(S.playerMarkers[p.name]){ S.map.removeLayer(S.playerMarkers[p.name]); delete S.playerMarkers[p.name]; }
+    var baseRadius=phase===1?s.r1:s.r2;
+    // Pénalité : réduire le rayon (plus petit = plus facile à trouver)
+    var penalty=p.penalty||0;
+    var radius=Math.max(20, halve?Math.floor(baseRadius/2):baseRadius - penalty*40);
+    var maxOff=phase===1?0.003:0.001;
+    var off=rndOffset(maxOff);
+    var dlat=p.lat+off.lat, dlng=p.lng+off.lng;
+    if(!S.playerCircles[p.name]){
+      S.playerCircles[p.name]=L.circle([dlat,dlng],{
+        radius:radius,color:col,fillColor:col,fillOpacity:0.12,weight:2,dashArray:'6 4'
+      }).addTo(S.map).bindPopup('<b style="color:'+col+'">'+p.name+'</b><br><small>Zone ~'+radius+' m'+(penalty>0?' ⚠️ +pénalité':'')+'</small>');
+    } else {
+      S.playerCircles[p.name].setLatLng([dlat,dlng]);
+      S.playerCircles[p.name].setRadius(radius);
+    }
+  });
+}
+
+// ── POUVOIRS ──────────────────────────────────────
+function usePower(type){
+  if(S.powerUsed){ toast('Tu as déjà utilisé ton pouvoir !','❌'); return; }
+  if(S.powerBlocked&&Date.now()<S.powerBlockedUntil){ toast('Tes pouvoirs sont bloqués par le chercheur !','🔒'); return; }
+  send({ type:'use_power', code:S.code, playerKey:S.playerKey, power:type });
+}
+
+function startFakePlacement(){
+  if(S.powerUsed){ toast('Tu as déjà utilisé ton pouvoir !','❌'); return; }
+  if(S.powerBlocked&&Date.now()<S.powerBlockedUntil){ toast('Tes pouvoirs sont bloqués !','🔒'); return; }
+  // On switch temporairement vers la carte pour placer la fausse position
+  S.fakePlacing=true;
+  show('screen-game');
+  if(!S.map) initMap();
+  document.getElementById('fake-hint').classList.add('active');
+  S.fakeClickHandler=function(e){
+    var fakeLat=e.latlng.lat, fakeLng=e.latlng.lng;
+    S.map.off('click',S.fakeClickHandler);
+    document.getElementById('fake-hint').classList.remove('active');
+    S.fakePlacing=false;
+    send({ type:'use_power', code:S.code, playerKey:S.playerKey, power:'fake', fakeLat:fakeLat, fakeLng:fakeLng });
+    show('screen-hidden');
+  };
+  S.map.on('click',S.fakeClickHandler);
+}
+
+function onPowerOk(msg){
+  S.powerUsed=true;
+  document.getElementById('btn-power-hide').disabled=true;
+  document.getElementById('btn-power-fake').disabled=true;
+  if(msg.power==='hide') toast('Position masquée pendant 1 minute !','🫥');
+  if(msg.power==='fake') toast('Fausse position placée !','📍');
+  if(msg.power==='sabotage') toast('Sabotage activé : '+msg.effect,'⚡');
+}
+
+function onPowerAnnounce(msg){
+  if(msg.power==='hide') toast('<b>'+msg.name+'</b> a masqué sa position !','🫥');
+  if(msg.power==='fake') toast('<b>'+msg.name+'</b> a placé une fausse position !','📍');
+}
+
+// ── SABOTAGE ──────────────────────────────────────
+function openSabotage(){
+  if(S.sabotageUsed){ toast('Sabotage déjà utilisé !','❌'); return; }
+  document.getElementById('sabotage-panel').classList.add('open');
+}
+function closeSabotage(){ document.getElementById('sabotage-panel').classList.remove('open'); }
+function doSabotage(effect){
+  closeSabotage();
+  S.sabotageUsed=true;
+  document.getElementById('btn-sabotage').disabled=true;
+  send({ type:'use_power', code:S.code, playerKey:S.playerKey, power:'sabotage', effect:effect });
+}
+
+function onSabotage(msg){
+  var name=msg.seekerName||'Le chercheur';
+  if(msg.effect==='reveal'){
+    S.revealUntil=Date.now()+30000;
+    toast(name+' active le SABOTAGE : positions exactes 30s !','👁️');
+    setTimeout(function(){ S.revealUntil=null; },30000);
+  } else if(msg.effect==='halve'){
+    S.halveUntil=Date.now()+60000;
+    toast(name+' active le SABOTAGE : rayons divisés par 2 !','🔍');
+    setTimeout(function(){ S.halveUntil=null; },60000);
+  } else if(msg.effect==='block'){
+    S.powerBlocked=true;
+    S.powerBlockedUntil=Date.now()+120000;
+    toast(name+' bloque les pouvoirs des cachés pendant 2 min !','🔒');
+    setTimeout(function(){ S.powerBlocked=false; S.powerBlockedUntil=null; },120000);
+  }
+}
+
+// ── FIN DE PARTIE ─────────────────────────────────
+function onGameEnd(msg){
+  clearInterval(S.timerPoll);
+  var players=msg.players||S.lastPlayers||{};
+  var reason=msg.reason||'unknown';
+  var icon=reason==='all_found'?'🏆':'⏰';
+  var title=reason==='all_found'?'Tous trouvés !':'Temps écoulé !';
+  var sub=reason==='all_found'?'Le chercheur a trouvé tout le monde !'
+    :'Le temps imparti est écoulé. Les cachés ont gagné !';
+  document.getElementById('end-icon').textContent=icon;
+  document.getElementById('end-title').textContent=title;
+  document.getElementById('end-sub').textContent=sub;
+  var list=document.getElementById('end-list'); list.innerHTML='';
+  // Classement : trouvés d'abord, puis cachés survivants
+  var found=(msg.foundLog||[]);
+  var survivors=Object.values(players).filter(function(p){ return !p.isSeeker&&!p.isFound; });
+  if(found.length){
+    var h=document.createElement('p'); h.style.cssText='font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;'; h.textContent='Trouvés'; list.appendChild(h);
+    found.forEach(function(f,i){
+      var col=playerColor(f.name), d=document.createElement('div'); d.className='player-item';
+      d.innerHTML='<span style="font-size:18px;width:28px;text-align:center">'+(i+1)+'.</span>'
+        +'<div class="pdot" style="background:'+col+'"></div>'
+        +'<span class="pname" style="color:'+col+'">'+f.name+'</span>';
+      list.appendChild(d);
+    });
+  }
+  if(survivors.length){
+    var h2=document.createElement('p'); h2.style.cssText='font-size:11px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin:12px 0 8px;'; h2.textContent='Survivants 🏅'; list.appendChild(h2);
+    survivors.forEach(function(p){
+      var col=playerColor(p.name), d=document.createElement('div'); d.className='player-item';
+      d.innerHTML='<span style="font-size:18px;width:28px;text-align:center">🙈</span>'
+        +'<div class="pdot" style="background:'+col+'"></div>'
+        +'<span class="pname" style="color:'+col+'">'+p.name+'</span>';
+      list.appendChild(d);
+    });
+  }
+  show('screen-end');
+}
+
+// ── MODAL TROUVER ─────────────────────────────────
+function openModal(){ document.getElementById('modal-code').value=''; document.getElementById('modal-err').textContent=''; document.getElementById('find-modal').classList.add('open'); setTimeout(function(){ document.getElementById('modal-code').focus(); },100); }
+function closeModal(){ document.getElementById('find-modal').classList.remove('open'); }
+function validateFound(){
+  var input=document.getElementById('modal-code').value.trim().toUpperCase();
+  if(input.length!==4){ showErr('modal-err','Code à 4 caractères !'); return; }
+  send({ type:'found', code:S.code, secretCode:input });
+  closeModal();
+}
+
+// ── UTILS ─────────────────────────────────────────
+function formatTime(sec){ return Math.floor(sec/60).toString().padStart(2,'0')+':'+Math.floor(sec%60).toString().padStart(2,'0'); }
+
+function leaveGame(){
+  clearInterval(S.timerPoll);
+  if(S.watchId) navigator.geolocation.clearWatch(S.watchId);
+  if(S.map){ S.map.remove(); }
+  S={ code:null,name:null,isSeeker:false,startTime:null,settings:null,watchId:null,timerPoll:null,playerKey:null,secretCode:null,becameSeeker:false,powerUsed:false,powerBlocked:false,powerBlockedUntil:null,map:null,selfMarker:null,zoneCircle:null,playerMarkers:{},playerCircles:{},fakeMarkers:{},sabotageUsed:false,fakePlacing:false,fakeClickHandler:null,revealUntil:null,halveUntil:null,lastPlayers:{} };
+  playerColors={}; colorIdx=0;
+  show('screen-home');
+}
+
+connectWS();
+</script>
+</body>
+</html>
