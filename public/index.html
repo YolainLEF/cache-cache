@@ -33,18 +33,29 @@ h1,h2,h3{font-family:'Syne',sans-serif;}
 .btn-warn{background:var(--accent2);color:#000;font-weight:800;}
 .btn-blue{background:var(--blue);color:#fff;}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
-.form-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:400px;}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:420px;}
 .form-title{font-size:20px;font-weight:800;margin-bottom:20px;}
-.form-group{margin-bottom:14px;}
+.form-group{margin-bottom:12px;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-label{display:block;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
-input,select{width:100%;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Space Mono',monospace;font-size:14px;outline:none;transition:border-color .2s;}
+label{display:block;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+input,select{width:100%;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Space Mono',monospace;font-size:14px;outline:none;transition:border-color .2s;}
 input:focus,select:focus{border-color:var(--accent);}
 input::placeholder{color:var(--muted);}
 select option{background:var(--surface2);}
 .back-btn{background:none;border:none;color:var(--muted);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;gap:8px;transition:color .2s;}
 .back-btn:hover{color:var(--text);}
 .err-msg{color:var(--accent);font-size:12px;min-height:14px;margin-top:4px;}
+
+/* Paliers */
+.paliers-section{margin-top:8px;}
+.palier-row{display:grid;grid-template-columns:auto 1fr 1fr 1fr auto;align-items:center;gap:8px;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;}
+.palier-label{font-size:11px;color:var(--accent2);font-weight:700;white-space:nowrap;}
+.palier-input{padding:7px 8px;font-size:12px;}
+.palier-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;transition:color .2s;}
+.palier-del:hover{color:var(--accent);}
+.add-palier-btn{background:var(--surface2);border:1px dashed var(--border);border-radius:10px;padding:10px;color:var(--muted);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;width:100%;transition:all .2s;text-align:center;}
+.add-palier-btn:hover{border-color:var(--accent);color:var(--accent);}
+
 #screen-waiting{gap:16px;}
 .code-display{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px;text-align:center;}
 .code-label{font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;}
@@ -57,8 +68,8 @@ select option{background:var(--surface2);}
 .pdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .pname{font-size:14px;font-weight:700;}
 .prole{font-size:10px;color:var(--muted);margin-left:auto;}
+.settings-summary{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 14px;font-size:12px;color:var(--muted);line-height:1.8;}
 
-/* HIDDEN */
 #screen-hidden{justify-content:center;align-items:center;text-align:center;gap:16px;}
 .hidden-status{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 22px;width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center;gap:12px;}
 .hidden-icon{font-size:52px;animation:breathe 3s ease-in-out infinite;}
@@ -77,7 +88,10 @@ select option{background:var(--surface2);}
 .power-title{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
 .power-btns{display:flex;flex-direction:column;gap:8px;}
 
-/* GAME */
+/* ALERTE ZONE */
+.zone-alert{background:rgba(255,60,95,.15);border:1px solid var(--accent);border-radius:16px;padding:12px 16px;width:100%;max-width:320px;text-align:center;font-size:13px;color:var(--accent);font-weight:700;display:none;animation:pulse 1s ease-in-out infinite;}
+.zone-alert.active{display:block;}
+
 #screen-game{padding:0;position:relative;min-height:100dvh;}
 #map{width:100%;height:100dvh;position:fixed;top:0;left:0;z-index:0;}
 .game-top{position:fixed;top:0;left:0;right:0;z-index:100;pointer-events:none;background:linear-gradient(to bottom,rgba(10,10,15,.97) 60%,transparent);padding:14px 18px 36px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
@@ -105,34 +119,24 @@ select option{background:var(--surface2);}
 .tag-found{color:var(--accent);}
 .tag-seeker{color:var(--blue);}
 .tag-moved{color:var(--accent2);}
+.tag-zone{color:var(--accent);font-weight:700;}
 .game-btns{display:flex;gap:8px;pointer-events:auto;}
 .game-btns .btn{flex:1;padding:12px;font-size:12px;}
-
-/* SABOTAGE PANEL */
 .sabotage-panel{background:rgba(19,19,26,.97);border:1px solid var(--border);border-radius:14px;padding:12px 14px;pointer-events:auto;display:none;flex-direction:column;gap:8px;}
 .sabotage-panel.open{display:flex;}
-
-/* FAKE MARKER MODE */
-.fake-hint{background:rgba(255,184,0,.15);border:1px solid var(--accent2);border-radius:14px;padding:10px 14px;font-size:12px;color:var(--accent2);pointer-events:auto;display:none;}
+.fake-hint{background:rgba(255,184,0,.15);border:1px solid var(--accent2);border-radius:14px;padding:10px 14px;font-size:12px;color:var(--accent2);pointer-events:auto;display:none;text-align:center;}
 .fake-hint.active{display:block;}
 
-/* END SCREEN */
 #screen-end{justify-content:center;align-items:center;text-align:center;gap:20px;padding:32px 20px;}
 .end-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 22px;width:100%;max-width:360px;}
-.end-icon{font-size:56px;margin-bottom:12px;}
-.end-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;margin-bottom:8px;}
-.end-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
 .end-list{text-align:left;display:flex;flex-direction:column;gap:8px;margin-top:16px;}
 
-/* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
 .modal-overlay.open{display:flex;}
 .modal-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:12px;animation:fadeIn .25s ease;}
 .modal-title{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;}
 .modal-btns{display:flex;gap:10px;}
 .modal-btns .btn{flex:1;padding:12px;}
-
-/* TOASTS */
 #toasts{position:fixed;top:14px;left:14px;right:14px;z-index:3000;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
 .toast{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:11px 14px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:10px;animation:toastIn .3s ease;}
 @keyframes toastIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
@@ -149,7 +153,6 @@ select option{background:var(--surface2);}
 <body>
 <div id="toasts"></div>
 
-<!-- MODAL trouver -->
 <div class="modal-overlay" id="find-modal">
   <div class="modal-box">
     <h2 class="modal-title">Joueur trouvé ?</h2>
@@ -172,7 +175,7 @@ select option{background:var(--surface2);}
   <div>
     <span class="logo-icon">👁️</span>
     <h1 class="logo-title">CACHE-CACHE</h1>
-    <p class="logo-sub">Géant · GPS · Paucourt</p>
+    <p class="logo-sub">Géant · GPS · Multijoueur</p>
   </div>
   <div style="font-size:12px;color:var(--muted);"><span class="conn-dot" id="conn-dot"></span><span id="conn-txt">Connexion…</span></div>
   <div class="home-buttons">
@@ -182,7 +185,7 @@ select option{background:var(--surface2);}
 </div>
 
 <!-- CREATE -->
-<div id="screen-create" class="screen" style="align-items:center;padding-top:40px;gap:0;">
+<div id="screen-create" class="screen" style="align-items:center;padding-top:32px;gap:0;overflow-y:auto;">
   <button class="back-btn" onclick="show('screen-home')">← Retour</button>
   <div class="form-card">
     <h2 class="form-title">Nouvelle partie</h2>
@@ -200,32 +203,23 @@ select option{background:var(--surface2);}
         <input id="c-hide" type="number" value="5" min="1" max="30">
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Palier 1 → 2 (min)</label>
-        <input id="c-p1" type="number" value="10" min="1" max="60">
-      </div>
-      <div class="form-group">
-        <label>Palier 2 → 3 (min)</label>
-        <input id="c-p2" type="number" value="10" min="1" max="60">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Rayon palier 1 (m)</label>
-        <input id="c-r1" type="number" value="500" min="50" max="2000">
-      </div>
-      <div class="form-group">
-        <label>Rayon palier 2 (m)</label>
-        <input id="c-r2" type="number" value="200" min="20" max="1000">
-      </div>
-    </div>
     <div class="form-group">
-      <label>Rayon de jeu max (m)</label>
+      <label>Zone de jeu max (m)</label>
       <input id="c-zone" type="number" value="1000" min="100" max="5000">
     </div>
+
+    <!-- PALIERS -->
+    <div class="paliers-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <label style="margin:0">Paliers de révélation</label>
+        <span style="font-size:10px;color:var(--muted)" id="palier-count-label">1 / 5</span>
+      </div>
+      <div id="paliers-list"></div>
+      <button class="add-palier-btn" id="add-palier-btn" onclick="addPalier()">+ Ajouter un palier</button>
+    </div>
+
     <p class="err-msg" id="c-err"></p>
-    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="createGame()">Créer la partie →</button>
+    <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="createGame()">Créer la partie →</button>
   </div>
 </div>
 
@@ -260,7 +254,7 @@ select option{background:var(--surface2);}
     <p class="section-label">Joueurs connectés · <span id="d-count">0</span></p>
     <div id="d-players"></div>
   </div>
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;font-size:12px;color:var(--muted);line-height:1.8;" id="d-settings-summary"></div>
+  <div class="settings-summary" id="d-settings-summary"></div>
   <button class="btn btn-success" id="d-start" onclick="startGame()" disabled>En attente de joueurs…</button>
 </div>
 
@@ -273,6 +267,7 @@ select option{background:var(--surface2);}
     <p class="hidden-phase" id="h-phase">La partie va commencer…</p>
     <div class="progress-bar"><div class="progress-fill" id="h-prog" style="width:0%"></div></div>
   </div>
+  <div class="zone-alert" id="zone-alert">⚠️ Tu sors de la zone de jeu !<br>Ta position exacte est révélée !</div>
   <div class="secret-box">
     <p class="secret-label">Ton code secret</p>
     <p class="secret-code" id="h-secret">----</p>
@@ -289,10 +284,10 @@ select option{background:var(--surface2);}
     <p class="section-label" style="margin-bottom:8px;">Joueurs trouvés</p>
     <div id="h-found-items"></div>
   </div>
-  <button class="btn btn-danger" onclick="leaveGame()">Quitter la partie</button>
+  <button class="btn btn-danger" onclick="leaveGame()">Quitter</button>
 </div>
 
-<!-- GAME (chercheur) -->
+<!-- GAME -->
 <div id="screen-game" class="screen">
   <div id="map"></div>
   <div class="game-top">
@@ -302,12 +297,12 @@ select option{background:var(--surface2);}
   <div class="game-bottom">
     <div class="sabotage-panel" id="sabotage-panel">
       <p style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;">⚡ Choisir ton sabotage</p>
-      <button class="btn btn-primary" style="font-size:11px;padding:10px" onclick="doSabotage('reveal')">👁️ Voir positions exactes 30 sec</button>
-      <button class="btn btn-warn" style="font-size:11px;padding:10px" onclick="doSabotage('halve')">🔍 Réduire rayons de moitié 1 min</button>
-      <button class="btn btn-blue" style="font-size:11px;padding:10px" onclick="doSabotage('block')">🔒 Bloquer pouvoirs des cachés 2 min</button>
+      <button class="btn btn-primary" style="font-size:11px;padding:10px" onclick="doSabotage('reveal')">👁️ Positions exactes 30 sec</button>
+      <button class="btn btn-warn" style="font-size:11px;padding:10px" onclick="doSabotage('halve')">🔍 Rayons divisés par 2 · 1 min</button>
+      <button class="btn btn-blue" style="font-size:11px;padding:10px" onclick="doSabotage('block')">🔒 Bloquer pouvoirs cachés · 2 min</button>
       <button class="btn btn-secondary" style="font-size:11px;padding:10px" onclick="closeSabotage()">Annuler</button>
     </div>
-    <div class="fake-hint" id="fake-hint">📍 Appuie sur la carte pour placer une fausse position<br><small>Appuie n'importe où sur la carte</small></div>
+    <div class="fake-hint" id="fake-hint">📍 Appuie sur la carte pour placer la fausse position</div>
     <div class="sidebar">
       <p class="sidebar-title">Joueurs</p>
       <div id="g-sidebar-list"></div>
@@ -326,9 +321,9 @@ select option{background:var(--surface2);}
 <!-- END -->
 <div id="screen-end" class="screen">
   <div class="end-card">
-    <div class="end-icon" id="end-icon">🏆</div>
-    <h2 class="end-title" id="end-title">Partie terminée !</h2>
-    <p class="end-sub" id="end-sub"></p>
+    <div style="font-size:56px;margin-bottom:12px" id="end-icon">🏆</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;margin-bottom:8px" id="end-title">Partie terminée !</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px" id="end-sub"></p>
     <div class="end-list" id="end-list"></div>
   </div>
   <button class="btn btn-primary" onclick="leaveGame()">Retour à l'accueil</button>
@@ -339,14 +334,48 @@ var PALETTE=['#ff3c5f','#ffb800','#00e676','#6495ed','#ff6ec7','#00d4ff','#ff8c0
 var playerColors={},colorIdx=0;
 function playerColor(n){ if(!playerColors[n]) playerColors[n]=PALETTE[colorIdx++%PALETTE.length]; return playerColors[n]; }
 
+// ── PALIERS ──────────────────────────────────────
+var paliers=[{dur:10,radius:500}]; // défaut 1 palier
+
+function renderPaliers(){
+  var list=document.getElementById('paliers-list');
+  list.innerHTML='';
+  paliers.forEach(function(p,i){
+    var row=document.createElement('div');
+    row.className='palier-row';
+    row.innerHTML='<span class="palier-label">Palier '+(i+1)+'</span>'
+      +'<div><label style="font-size:9px">Durée (min)</label><input class="palier-input" type="number" min="1" max="60" value="'+p.dur+'" oninput="paliers['+i+'].dur=parseInt(this.value)||1"></div>'
+      +'<div><label style="font-size:9px">Rayon (m)</label><input class="palier-input" type="number" min="20" max="3000" value="'+p.radius+'" oninput="paliers['+i+'].radius=parseInt(this.value)||100"></div>'
+      +(paliers.length>1?'<button class="palier-del" onclick="delPalier('+i+')">✕</button>':'<div></div>');
+    list.appendChild(row);
+  });
+  document.getElementById('palier-count-label').textContent=paliers.length+' / 5';
+  document.getElementById('add-palier-btn').style.display=paliers.length>=5?'none':'block';
+}
+
+function addPalier(){
+  if(paliers.length>=5) return;
+  paliers.push({dur:10,radius:200});
+  renderPaliers();
+}
+
+function delPalier(i){
+  if(paliers.length<=1) return;
+  paliers.splice(i,1);
+  renderPaliers();
+}
+
+// Init
+renderPaliers();
+
+// ── STATE ─────────────────────────────────────────
 var S={
   code:null,name:null,isSeeker:false,startTime:null,settings:null,
   watchId:null,timerPoll:null,playerKey:null,secretCode:null,
   becameSeeker:false,powerUsed:false,powerBlocked:false,powerBlockedUntil:null,
   map:null,selfMarker:null,zoneCircle:null,playerMarkers:{},playerCircles:{},fakeMarkers:{},
   sabotageUsed:false,fakePlacing:false,fakeClickHandler:null,
-  revealUntil:null,halveUntil:null,
-  lastPlayers:{}
+  revealUntil:null,halveUntil:null,lastPlayers:{},myLat:null,myLng:null
 };
 
 var ws=null;
@@ -360,17 +389,14 @@ function connectWS(){
   ws.onmessage=function(e){
     var msg; try{ msg=JSON.parse(e.data); }catch(ex){ return; }
     if(msg.type==='error'){ toast(msg.msg,'❌'); return; }
-    if(msg.type==='created'){ /* ok */ }
+    if(msg.type==='created'){}
     if(msg.type==='joined'||msg.type==='rejoined'){
       if(msg.type==='rejoined'){ S.playerKey=msg.playerKey; S.secretCode=msg.secretCode; document.getElementById('h-secret').textContent=msg.secretCode||'----'; }
       onGameState(msg.game);
     }
     if(msg.type==='game_state'){ onGameState(msg.game); }
-    if(msg.type==='positions'){ onPositions(msg.players, msg.centerLat, msg.centerLng); }
-    if(msg.type==='found_announce'){
-      var col=playerColor(msg.name);
-      toast('<span style="color:'+col+';font-weight:700">'+msg.name+'</span> a été trouvé(e) ! Il·Elle devient chercheur.','🎯');
-    }
+    if(msg.type==='positions'){ onPositions(msg.players,msg.centerLat,msg.centerLng); }
+    if(msg.type==='found_announce'){ var col=playerColor(msg.name); toast('<span style="color:'+col+';font-weight:700">'+msg.name+'</span> a été trouvé(e) ! Il·Elle devient chercheur.','🎯'); }
     if(msg.type==='power_announce'){ onPowerAnnounce(msg); }
     if(msg.type==='sabotage'){ onSabotage(msg); }
     if(msg.type==='game_end'){ onGameEnd(msg); }
@@ -378,10 +404,7 @@ function connectWS(){
   };
 }
 function send(obj){ if(ws&&ws.readyState===1) ws.send(JSON.stringify(obj)); }
-function setConn(ok){
-  document.getElementById('conn-dot').className='conn-dot'+(ok?' ok':'');
-  document.getElementById('conn-txt').textContent=ok?'Connecté':'Déconnecté — reconnexion…';
-}
+function setConn(ok){ document.getElementById('conn-dot').className='conn-dot'+(ok?' ok':''); document.getElementById('conn-txt').textContent=ok?'Connecté':'Déconnecté — reconnexion…'; }
 
 function show(id){
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
@@ -396,6 +419,7 @@ function toast(msg,emoji){
   setTimeout(function(){ t.classList.add('out'); setTimeout(function(){ t.remove(); },350); },5000);
 }
 function genCode(n){ var a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=''; for(var i=0;i<n;i++) r+=a[Math.floor(Math.random()*a.length)]; return r; }
+function formatTime(sec){ return Math.floor(sec/60).toString().padStart(2,'0')+':'+Math.floor(sec%60).toString().padStart(2,'0'); }
 
 // ── CREATE ────────────────────────────────────────
 function createGame(){
@@ -405,15 +429,11 @@ function createGame(){
   var settings={
     dur:parseInt(document.getElementById('c-dur').value)||45,
     hideTime:parseInt(document.getElementById('c-hide').value)||5,
-    p1:parseInt(document.getElementById('c-p1').value)||10,
-    p2:parseInt(document.getElementById('c-p2').value)||10,
-    r1:parseInt(document.getElementById('c-r1').value)||500,
-    r2:parseInt(document.getElementById('c-r2').value)||200,
-    zone:parseInt(document.getElementById('c-zone').value)||1000
+    zone:parseInt(document.getElementById('c-zone').value)||1000,
+    paliers:paliers.map(function(p){ return {dur:p.dur,radius:p.radius}; })
   };
   var code=genCode(6); playerColor(name);
-  S.code=code; S.name=name; S.isSeeker=true; S.settings=settings;
-  S.playerKey=name+'_seeker';
+  S.code=code; S.name=name; S.isSeeker=true; S.settings=settings; S.playerKey=name+'_seeker';
   document.getElementById('d-code').textContent=code;
   renderSettingsSummary(settings);
   send({ type:'create', code:code, settings:settings, name:name, playerKey:S.playerKey });
@@ -421,10 +441,13 @@ function createGame(){
 }
 
 function renderSettingsSummary(s){
-  document.getElementById('d-settings-summary').innerHTML=
-    '⏱ Durée : '+s.dur+' min &nbsp;·&nbsp; 🙈 Cachette : '+s.hideTime+' min<br>'
-    +'📍 Palier 1 : '+s.r1+'m après '+s.hideTime+'min &nbsp;·&nbsp; Palier 2 : '+s.r2+'m + '+s.p1+'min<br>'
-    +'🗺️ Zone max : '+s.zone+'m';
+  var p=(s.paliers||[{dur:10,radius:500}]);
+  var txt='⏱ Durée : '+s.dur+' min · 🙈 Cachette : '+s.hideTime+' min<br>';
+  txt+='🗺️ Zone max : '+s.zone+' m<br>';
+  txt+='📍 Paliers : ';
+  var pTxt=p.map(function(pl,i){ return 'P'+(i+1)+' '+pl.radius+'m ('+pl.dur+'min)'; }).join(' → ');
+  txt+=pTxt;
+  document.getElementById('d-settings-summary').innerHTML=txt;
 }
 
 // ── JOIN ──────────────────────────────────────────
@@ -450,43 +473,34 @@ function onGameState(g){
   S.lastPlayers=g.players||{};
   S.settings=g.settings||S.settings;
   Object.values(g.players||{}).forEach(function(p){ playerColor(p.name); });
-
-  if(g.status==='ended'){ onGameEnd({ reason: g.endReason, players: g.players, foundLog: g.foundLog }); return; }
-
-  if(g.status==='waiting'){
-    renderWait(g); return;
-  }
-
+  if(g.status==='ended'){ onGameEnd({ reason:g.endReason, players:g.players, foundLog:g.foundLog }); return; }
+  if(g.status==='waiting'){ renderWait(g); return; }
   S.startTime=g.startTime;
-
-  // Caché trouvé → devient chercheur
   if(S.playerKey&&g.players[S.playerKey]&&g.players[S.playerKey].isFound&&!S.becameSeeker){
     S.becameSeeker=true;
     toast('Tu as été trouvé(e) ! Tu deviens chercheur 👁️','🎯');
     setTimeout(function(){ S.isSeeker=true; show('screen-game'); initMap(); startGameLoop(); },2000);
     return;
   }
-
-  if(S.isSeeker){
-    buildPhaseRows();
-    renderSidebarFromPlayers(g.players);
-    renderFoundLog(g.foundLog);
-  } else {
-    renderHiddenPhase();
-    renderFoundLog(g.foundLog);
-    // Partie lancée mais on était en waiting
-    if(document.getElementById('screen-hidden').classList.contains('active')&&!S.startTime){
-      S.startTime=g.startTime;
-    }
-  }
+  if(S.isSeeker){ buildPhaseRows(); renderSidebarFromPlayers(g.players); renderFoundLog(g.foundLog); }
+  else { renderHiddenPhase(); renderFoundLog(g.foundLog); }
 }
 
-function onPositions(players, cLat, cLng){
+function onPositions(players,cLat,cLng){
   S.lastPlayers=players;
   if(S.isSeeker&&S.map){
     var min=(Date.now()-S.startTime)/60000;
-    updateMarkers(players, getPhase(min));
+    updateMarkers(players,getPhase(min));
     renderSidebarFromPlayers(players);
+    // Dessiner zone si center connu
+    if(cLat&&!S.zoneCircle) drawZoneCircle(cLat,cLng);
+  }
+  // Vérif hors zone pour les cachés
+  if(!S.isSeeker&&players[S.playerKey]){
+    var me=players[S.playerKey];
+    var alert=document.getElementById('zone-alert');
+    if(me.outOfZone){ alert.classList.add('active'); }
+    else { alert.classList.remove('active'); }
   }
 }
 
@@ -510,25 +524,16 @@ function renderWait(g){
 }
 
 function startGame(){
-  var centerLat=null, centerLng=null;
-  if(S.map&&navigator.geolocation){
+  if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(function(p){
-      centerLat=p.coords.latitude; centerLng=p.coords.longitude;
-      send({ type:'start', code:S.code, centerLat:centerLat, centerLng:centerLng });
-    }, function(){ send({ type:'start', code:S.code }); });
-  } else {
-    send({ type:'start', code:S.code });
-  }
-  show('screen-game');
-  initMap();
-  startGameLoop();
+      send({ type:'start', code:S.code, centerLat:p.coords.latitude, centerLng:p.coords.longitude });
+    },function(){ send({ type:'start', code:S.code }); });
+  } else { send({ type:'start', code:S.code }); }
+  show('screen-game'); initMap(); startGameLoop();
 }
 
 // ── HIDDEN LOOP ───────────────────────────────────
-function startHiddenLoop(){
-  renderHiddenPhase();
-  S.timerPoll=setInterval(renderHiddenPhase,1000);
-}
+function startHiddenLoop(){ renderHiddenPhase(); S.timerPoll=setInterval(renderHiddenPhase,1000); }
 
 function renderHiddenPhase(){
   if(!S.startTime){
@@ -537,47 +542,53 @@ function renderHiddenPhase(){
     document.getElementById('h-countdown').style.display='none';
     return;
   }
-  var s=S.settings||{dur:45,hideTime:5,p1:10,p2:10};
-  var elapsed=(Date.now()-S.startTime)/1000; // secondes
+  var s=S.settings||{dur:45,hideTime:5,paliers:[{dur:10,radius:500}]};
+  var elapsed=(Date.now()-S.startTime)/1000;
   var hideTimeSec=s.hideTime*60;
-  var totalSec=s.dur*60;
-  var pct=Math.min((elapsed/totalSec)*100,100);
+  var pct=Math.min((elapsed/(s.dur*60))*100,100);
   document.getElementById('h-prog').style.width=pct+'%';
+  var icon,title,phase,showCD=false;
 
-  var icon,title,phase,showCountdown=false;
-
+  // Phase cachette
   if(elapsed<hideTimeSec){
-    // Phase cachette : compte à rebours
-    var remaining=Math.ceil(hideTimeSec-elapsed);
-    icon='🏃'; title='COURS TE CACHER !'; showCountdown=true;
-    document.getElementById('h-countdown').textContent=formatTime(remaining);
+    var rem=Math.ceil(hideTimeSec-elapsed);
+    icon='🏃'; title='COURS TE CACHER !'; showCD=true;
+    document.getElementById('h-countdown').textContent=formatTime(rem);
     phase='Reste immobile quand le chrono atteint 0 !';
     document.getElementById('h-phase').style.color='var(--accent2)';
-  } else if(elapsed<hideTimeSec+(s.p1*60)){
-    icon='🙈'; title='Tu es invisible !';
-    phase='Zone '+s.r1+'m dans '+ Math.ceil(s.p1-(elapsed-hideTimeSec)/60)+' min';
-    document.getElementById('h-phase').style.color='';
-  } else if(elapsed<hideTimeSec+(s.p1+s.p2)*60){
-    icon='😬'; title='Zone ~'+s.r1+'m visible…';
-    phase='Zone '+s.r2+'m dans '+Math.ceil(s.p2-(elapsed-hideTimeSec-s.p1*60)/60)+' min';
-    document.getElementById('h-phase').style.color='';
   } else {
-    icon='🚨'; title='POSITION EXACTE !'; phase='Le chercheur te voit ! Reste IMMOBILE !';
-    document.getElementById('h-phase').style.color='var(--accent)';
+    // Trouver dans quel palier on est
+    var palierElapsed=elapsed-hideTimeSec;
+    var cumul=0;
+    var palList=s.paliers||[{dur:10,radius:500}];
+    var currentPalier=-1;
+    for(var i=0;i<palList.length;i++){
+      cumul+=palList[i].dur*60;
+      if(palierElapsed<cumul){ currentPalier=i; break; }
+    }
+    if(currentPalier===-1){
+      icon='🚨'; title='POSITION EXACTE !'; phase='Le chercheur te voit ! Reste IMMOBILE !';
+      document.getElementById('h-phase').style.color='var(--accent)';
+    } else {
+      var prev=0; for(var j=0;j<currentPalier;j++) prev+=palList[j].dur*60;
+      var remPalier=Math.ceil((prev+palList[currentPalier].dur*60)-palierElapsed);
+      if(currentPalier===0){ icon='🙈'; title='Tu es invisible !'; }
+      else { icon='😬'; title='Zone ~'+palList[currentPalier-1].radius+'m visible…'; }
+      phase='Palier '+(currentPalier+1)+' / '+palList.length+' · Zone '+palList[currentPalier].radius+'m dans '+Math.ceil(remPalier/60)+' min';
+      document.getElementById('h-phase').style.color='';
+    }
   }
 
   document.getElementById('h-icon').textContent=icon;
   document.getElementById('h-title').textContent=title;
   document.getElementById('h-phase').textContent=phase;
-  document.getElementById('h-countdown').style.display=showCountdown?'block':'none';
+  document.getElementById('h-countdown').style.display=showCD?'block':'none';
 
   // Alerte déplacement
-  if(elapsed>hideTimeSec){
-    var me=S.lastPlayers[S.playerKey];
-    if(me&&me.moved){
-      document.getElementById('h-phase').textContent='⚠️ Tu t\'es déplacé(e) ! Rayon réduit en pénalité !';
-      document.getElementById('h-phase').style.color='var(--accent)';
-    }
+  var me=S.lastPlayers[S.playerKey];
+  if(me&&me.moved&&elapsed>hideTimeSec){
+    document.getElementById('h-phase').textContent='⚠️ Tu t\'es déplacé ! Rayon réduit en pénalité.';
+    document.getElementById('h-phase').style.color='var(--accent)';
   }
 }
 
@@ -621,7 +632,6 @@ function updateSelfMarker(){
 
 // ── MAP ───────────────────────────────────────────
 var PAU={ lat:48.0398, lng:2.78692 };
-
 function initMap(){
   if(S.map){ S.map.remove(); S.map=null; S.selfMarker=null; S.zoneCircle=null; S.playerMarkers={}; S.playerCircles={}; S.fakeMarkers={}; }
   S.map=L.map('map',{ center:[PAU.lat,PAU.lng], zoom:15, zoomControl:false });
@@ -641,33 +651,33 @@ function drawZoneCircle(lat,lng){
 
 // ── GAME LOOP ─────────────────────────────────────
 function getPhase(min){
-  if(!S.settings) return 0;
-  var s=S.settings;
-  var hideMin=s.hideTime;
-  if(min<hideMin) return -1; // phase cachette
-  var elapsed=min-hideMin;
-  if(elapsed<s.p1) return 0;
-  if(elapsed<s.p1+s.p2) return 1;
-  return 2;
+  if(!S.settings) return -1;
+  var s=S.settings, hideMin=s.hideTime;
+  if(min<hideMin) return -1;
+  var elapsed=min-hideMin, cumul=0;
+  var palList=s.paliers||[{dur:10,radius:500}];
+  for(var i=0;i<palList.length;i++){
+    cumul+=palList[i].dur;
+    if(elapsed<cumul) return i;
+  }
+  return palList.length; // position exacte
 }
 
 function buildPhaseRows(){
   if(!S.settings) return;
-  var s=S.settings;
-  var rows=document.getElementById('g-phase-rows');
-  rows.innerHTML=
-    '<div class="phase-row" id="pr-1"><div class="ph-dot"></div><span>0–'+s.hideTime+' min · Cachette</span></div>'
-    +'<div class="phase-row" id="pr0"><div class="ph-dot"></div><span>'+s.hideTime+'–'+(s.hideTime+s.p1)+' min · Masqué</span></div>'
-    +'<div class="phase-row" id="pr1"><div class="ph-dot"></div><span>+'+(s.hideTime+s.p1)+' min · Zone ~'+s.r1+' m</span></div>'
-    +'<div class="phase-row" id="pr2"><div class="ph-dot"></div><span>+'+(s.hideTime+s.p1+s.p2)+' min · Zone ~'+s.r2+' m</span></div>'
-    +'<div class="phase-row" id="pr3"><div class="ph-dot"></div><span>Position exacte</span></div>';
+  var s=S.settings, rows=document.getElementById('g-phase-rows');
+  var palList=s.paliers||[{dur:10,radius:500}];
+  var html='<div class="phase-row" id="pr--1"><div class="ph-dot"></div><span>0–'+s.hideTime+' min · Cachette</span></div>';
+  var cumul=s.hideTime;
+  palList.forEach(function(p,i){
+    html+='<div class="phase-row" id="pr-'+i+'"><div class="ph-dot"></div><span>'+cumul+'–'+(cumul+p.dur)+' min · Zone ~'+p.radius+'m</span></div>';
+    cumul+=p.dur;
+  });
+  html+='<div class="phase-row" id="pr-'+palList.length+'"><div class="ph-dot"></div><span>'+cumul+'min+ · Position exacte</span></div>';
+  rows.innerHTML=html;
 }
 
-function startGameLoop(){
-  buildPhaseRows();
-  tickUI();
-  S.timerPoll=setInterval(tickUI,1000);
-}
+function startGameLoop(){ buildPhaseRows(); tickUI(); S.timerPoll=setInterval(tickUI,1000); }
 
 function tickUI(){
   if(!S.startTime) return;
@@ -675,13 +685,21 @@ function tickUI(){
   var m=Math.floor(el/60000).toString().padStart(2,'0');
   var sec=Math.floor((el%60000)/1000).toString().padStart(2,'0');
   document.getElementById('g-timer').textContent=m+':'+sec;
-  var labels={'-1':'Cachette','0':'Masqué','1':'Zone ~'+((S.settings||{}).r1||500)+' m','2':'Zone ~'+((S.settings||{}).r2||200)+' m','3':'Position exacte'};
-  var cls={'-1':'ph-hide','0':'ph-hidden','1':'ph-500','2':'ph-200','3':'ph-exact'};
+  var s=S.settings||{}, palList=s.paliers||[{dur:10,radius:500}];
+  var label, cls;
+  if(phase===-1){ label='Cachette'; cls='ph-hide'; }
+  else if(phase<palList.length){ label='Zone ~'+palList[phase].radius+'m'; cls=phase===0?'ph-hidden':'ph-200'; }
+  else { label='Position exacte'; cls='ph-exact'; }
   var badge=document.getElementById('g-badge');
-  badge.textContent=labels[phase]||''; badge.className='phase-badge '+(cls[phase]||'ph-hidden');
-  ['-1','0','1','2','3'].forEach(function(i){
-    var el2=document.getElementById('pr'+i); if(!el2) return;
-    el2.className='phase-row'+(String(phase)===i?' active':'');
+  badge.textContent=label; badge.className='phase-badge '+cls;
+  // Phase rows
+  var ids=['pr--1'];
+  for(var i=0;i<palList.length;i++) ids.push('pr-'+i);
+  ids.push('pr-'+palList.length);
+  ids.forEach(function(id,idx){
+    var el2=document.getElementById(id); if(!el2) return;
+    var phaseIdx=idx-1; // pr--1 = phase -1, pr-0 = phase 0...
+    el2.className='phase-row'+(phase===phaseIdx?' active':'');
   });
 }
 
@@ -694,10 +712,12 @@ function renderSidebarFromPlayers(players){
   hidden.concat(seekers).concat(found).forEach(function(p){
     if(p.isSeeker&&p.name===S.name&&!p.isFound) return;
     var col=playerColor(p.name), d=document.createElement('div'); d.className='sidebar-row';
-    var tag=p.isFound?'<span class="stag tag-found">Trouvé · 👁️</span>'
-      :p.isSeeker?'<span class="stag tag-seeker">Chercheur</span>'
-      :p.moved?'<span class="stag tag-moved">⚠️ Bougé</span>'
-      :'<span class="stag">Caché</span>';
+    var tag;
+    if(p.isFound) tag='<span class="stag tag-found">Trouvé · 👁️</span>';
+    else if(p.isSeeker) tag='<span class="stag tag-seeker">Chercheur</span>';
+    else if(p.outOfZone) tag='<span class="stag tag-zone">⚠️ Hors zone</span>';
+    else if(p.moved) tag='<span class="stag tag-moved">⚠️ Bougé</span>';
+    else tag='<span class="stag">Caché</span>';
     d.innerHTML='<div class="sdot" style="background:'+col+';box-shadow:0 0 5px '+col+'60"></div>'
       +'<span style="color:'+col+'">'+p.name+'</span>'+tag;
     list.appendChild(d);
@@ -706,9 +726,9 @@ function renderSidebarFromPlayers(players){
 
 function rndOffset(maxDeg){ var a=Math.random()*2*Math.PI,r=Math.random()*maxDeg; return {lat:Math.sin(a)*r,lng:Math.cos(a)*r}; }
 
-function updateMarkers(players, phase){
+function updateMarkers(players,phase){
   if(!S.map) return;
-  var s=S.settings||{r1:500,r2:200};
+  var s=S.settings||{}, palList=s.paliers||[{dur:10,radius:500}];
   var reveal=S.revealUntil&&Date.now()<S.revealUntil;
   var halve=S.halveUntil&&Date.now()<S.halveUntil;
 
@@ -723,52 +743,52 @@ function updateMarkers(players, phase){
     if(!p.lat||!p.lng) return;
 
     // Fausse position
-    if(p.fakeMarker){
-      if(!S.fakeMarkers[p.name]){
-        S.fakeMarkers[p.name]=L.circle([p.fakeMarker.lat,p.fakeMarker.lng],{
-          radius:200, color:'#ff3c5f', fillColor:'#ff3c5f', fillOpacity:0.15, weight:2, dashArray:'4 4'
-        }).addTo(S.map).bindPopup('<b style="color:#ff3c5f">FAUSSE position — '+p.name+'</b>');
+    if(p.fakeMarker&&!S.fakeMarkers[p.name]){
+      S.fakeMarkers[p.name]=L.circle([p.fakeMarker.lat,p.fakeMarker.lng],{
+        radius:200,color:'#ff3c5f',fillColor:'#ff3c5f',fillOpacity:0.15,weight:2,dashArray:'4 4'
+      }).addTo(S.map).bindPopup('<b style="color:#ff3c5f">FAUSSE position — '+p.name+'</b>');
+    }
+
+    // Hors zone → position exacte révélée
+    var forceExact=p.outOfZone||reveal;
+
+    // Masqué (phase -1 ou 0) sans reveal ni forceExact
+    if((phase<0||phase===0)&&!forceExact&&!p.outOfZone){
+      if(!reveal&&(p.hidden||phase<0)){
+        if(S.playerCircles[p.name]){ S.map.removeLayer(S.playerCircles[p.name]); delete S.playerCircles[p.name]; }
+        if(S.playerMarkers[p.name]){ S.map.removeLayer(S.playerMarkers[p.name]); delete S.playerMarkers[p.name]; }
+        return;
       }
     }
 
-    // Position masquée et pas reveal
-    if((phase===0||phase===-1)&&!reveal){
+    // Position exacte
+    if(phase>=palList.length||forceExact){
       if(S.playerCircles[p.name]){ S.map.removeLayer(S.playerCircles[p.name]); delete S.playerCircles[p.name]; }
-      if(S.playerMarkers[p.name]){ S.map.removeLayer(S.playerMarkers[p.name]); delete S.playerMarkers[p.name]; }
+      if(!S.playerMarkers[p.name]){
+        S.playerMarkers[p.name]=L.circleMarker([p.lat,p.lng],{
+          radius:11,color:'#fff',weight:2,fillColor:col,fillOpacity:0.95
+        }).addTo(S.map).bindPopup('<b style="color:'+col+'">'+p.name+'</b>'+(p.outOfZone?'<br><small>⚠️ Hors zone</small>':''));
+      } else { S.playerMarkers[p.name].setLatLng([p.lat,p.lng]); }
       return;
     }
 
-    // Caché (hidden pouvoir actif)
+    // Cercle flou selon palier
     if(p.hidden&&!reveal){
       if(S.playerCircles[p.name]){ S.map.removeLayer(S.playerCircles[p.name]); delete S.playerCircles[p.name]; }
       if(S.playerMarkers[p.name]){ S.map.removeLayer(S.playerMarkers[p.name]); delete S.playerMarkers[p.name]; }
       return;
     }
-
-    // Position exacte (phase 3 ou reveal)
-    if(phase===3||reveal){
-      if(S.playerCircles[p.name]){ S.map.removeLayer(S.playerCircles[p.name]); delete S.playerCircles[p.name]; }
-      if(!S.playerMarkers[p.name]){
-        S.playerMarkers[p.name]=L.circleMarker([p.lat,p.lng],{
-          radius:11,color:'#fff',weight:2,fillColor:col,fillOpacity:0.95
-        }).addTo(S.map).bindPopup('<b style="color:'+col+'">'+p.name+'</b><br><small>Position exacte'+(reveal?' (SABOTAGE)':'')+'</small>');
-      } else { S.playerMarkers[p.name].setLatLng([p.lat,p.lng]); }
-      return;
-    }
-
-    // Cercle flou
     if(S.playerMarkers[p.name]){ S.map.removeLayer(S.playerMarkers[p.name]); delete S.playerMarkers[p.name]; }
-    var baseRadius=phase===1?s.r1:s.r2;
-    // Pénalité : réduire le rayon (plus petit = plus facile à trouver)
+    var baseRadius=palList[phase]?palList[phase].radius:200;
     var penalty=p.penalty||0;
-    var radius=Math.max(20, halve?Math.floor(baseRadius/2):baseRadius - penalty*40);
-    var maxOff=phase===1?0.003:0.001;
+    var radius=Math.max(20,halve?Math.floor(baseRadius/2):baseRadius-penalty*40);
+    var maxOff=(radius/110000)*0.6;
     var off=rndOffset(maxOff);
     var dlat=p.lat+off.lat, dlng=p.lng+off.lng;
     if(!S.playerCircles[p.name]){
       S.playerCircles[p.name]=L.circle([dlat,dlng],{
         radius:radius,color:col,fillColor:col,fillOpacity:0.12,weight:2,dashArray:'6 4'
-      }).addTo(S.map).bindPopup('<b style="color:'+col+'">'+p.name+'</b><br><small>Zone ~'+radius+' m'+(penalty>0?' ⚠️ +pénalité':'')+'</small>');
+      }).addTo(S.map).bindPopup('<b style="color:'+col+'">'+p.name+'</b><br><small>Zone ~'+radius+'m'+(penalty>0?' · ⚠️ pénalité':'')+'</small>');
     } else {
       S.playerCircles[p.name].setLatLng([dlat,dlng]);
       S.playerCircles[p.name].setRadius(radius);
@@ -778,133 +798,95 @@ function updateMarkers(players, phase){
 
 // ── POUVOIRS ──────────────────────────────────────
 function usePower(type){
-  if(S.powerUsed){ toast('Tu as déjà utilisé ton pouvoir !','❌'); return; }
-  if(S.powerBlocked&&Date.now()<S.powerBlockedUntil){ toast('Tes pouvoirs sont bloqués par le chercheur !','🔒'); return; }
+  if(S.powerUsed){ toast('Pouvoir déjà utilisé !','❌'); return; }
+  if(S.powerBlocked&&Date.now()<S.powerBlockedUntil){ toast('Tes pouvoirs sont bloqués !','🔒'); return; }
   send({ type:'use_power', code:S.code, playerKey:S.playerKey, power:type });
 }
-
 function startFakePlacement(){
-  if(S.powerUsed){ toast('Tu as déjà utilisé ton pouvoir !','❌'); return; }
+  if(S.powerUsed){ toast('Pouvoir déjà utilisé !','❌'); return; }
   if(S.powerBlocked&&Date.now()<S.powerBlockedUntil){ toast('Tes pouvoirs sont bloqués !','🔒'); return; }
-  // On switch temporairement vers la carte pour placer la fausse position
-  S.fakePlacing=true;
-  show('screen-game');
+  S.fakePlacing=true; show('screen-game');
   if(!S.map) initMap();
   document.getElementById('fake-hint').classList.add('active');
   S.fakeClickHandler=function(e){
-    var fakeLat=e.latlng.lat, fakeLng=e.latlng.lng;
     S.map.off('click',S.fakeClickHandler);
     document.getElementById('fake-hint').classList.remove('active');
     S.fakePlacing=false;
-    send({ type:'use_power', code:S.code, playerKey:S.playerKey, power:'fake', fakeLat:fakeLat, fakeLng:fakeLng });
+    send({ type:'use_power', code:S.code, playerKey:S.playerKey, power:'fake', fakeLat:e.latlng.lat, fakeLng:e.latlng.lng });
     show('screen-hidden');
   };
   S.map.on('click',S.fakeClickHandler);
 }
-
 function onPowerOk(msg){
   S.powerUsed=true;
   document.getElementById('btn-power-hide').disabled=true;
   document.getElementById('btn-power-fake').disabled=true;
-  if(msg.power==='hide') toast('Position masquée pendant 1 minute !','🫥');
+  if(msg.power==='hide') toast('Position masquée 1 minute !','🫥');
   if(msg.power==='fake') toast('Fausse position placée !','📍');
-  if(msg.power==='sabotage') toast('Sabotage activé : '+msg.effect,'⚡');
+  if(msg.power==='sabotage') toast('Sabotage activé !','⚡');
 }
-
 function onPowerAnnounce(msg){
   if(msg.power==='hide') toast('<b>'+msg.name+'</b> a masqué sa position !','🫥');
   if(msg.power==='fake') toast('<b>'+msg.name+'</b> a placé une fausse position !','📍');
 }
 
 // ── SABOTAGE ──────────────────────────────────────
-function openSabotage(){
-  if(S.sabotageUsed){ toast('Sabotage déjà utilisé !','❌'); return; }
-  document.getElementById('sabotage-panel').classList.add('open');
-}
+function openSabotage(){ if(S.sabotageUsed){ toast('Sabotage déjà utilisé !','❌'); return; } document.getElementById('sabotage-panel').classList.add('open'); }
 function closeSabotage(){ document.getElementById('sabotage-panel').classList.remove('open'); }
-function doSabotage(effect){
-  closeSabotage();
-  S.sabotageUsed=true;
-  document.getElementById('btn-sabotage').disabled=true;
-  send({ type:'use_power', code:S.code, playerKey:S.playerKey, power:'sabotage', effect:effect });
-}
-
+function doSabotage(effect){ closeSabotage(); S.sabotageUsed=true; document.getElementById('btn-sabotage').disabled=true; send({ type:'use_power', code:S.code, playerKey:S.playerKey, power:'sabotage', effect:effect }); }
 function onSabotage(msg){
   var name=msg.seekerName||'Le chercheur';
-  if(msg.effect==='reveal'){
-    S.revealUntil=Date.now()+30000;
-    toast(name+' active le SABOTAGE : positions exactes 30s !','👁️');
-    setTimeout(function(){ S.revealUntil=null; },30000);
-  } else if(msg.effect==='halve'){
-    S.halveUntil=Date.now()+60000;
-    toast(name+' active le SABOTAGE : rayons divisés par 2 !','🔍');
-    setTimeout(function(){ S.halveUntil=null; },60000);
-  } else if(msg.effect==='block'){
-    S.powerBlocked=true;
-    S.powerBlockedUntil=Date.now()+120000;
-    toast(name+' bloque les pouvoirs des cachés pendant 2 min !','🔒');
-    setTimeout(function(){ S.powerBlocked=false; S.powerBlockedUntil=null; },120000);
-  }
+  if(msg.effect==='reveal'){ S.revealUntil=Date.now()+30000; toast(name+' · Positions exactes 30s !','👁️'); setTimeout(function(){ S.revealUntil=null; },30000); }
+  else if(msg.effect==='halve'){ S.halveUntil=Date.now()+60000; toast(name+' · Rayons ÷2 pendant 1 min !','🔍'); setTimeout(function(){ S.halveUntil=null; },60000); }
+  else if(msg.effect==='block'){ S.powerBlocked=true; S.powerBlockedUntil=Date.now()+120000; toast(name+' bloque les pouvoirs 2 min !','🔒'); setTimeout(function(){ S.powerBlocked=false; S.powerBlockedUntil=null; },120000); }
 }
 
 // ── FIN DE PARTIE ─────────────────────────────────
 function onGameEnd(msg){
   clearInterval(S.timerPoll);
-  var players=msg.players||S.lastPlayers||{};
-  var reason=msg.reason||'unknown';
-  var icon=reason==='all_found'?'🏆':'⏰';
-  var title=reason==='all_found'?'Tous trouvés !':'Temps écoulé !';
-  var sub=reason==='all_found'?'Le chercheur a trouvé tout le monde !'
-    :'Le temps imparti est écoulé. Les cachés ont gagné !';
-  document.getElementById('end-icon').textContent=icon;
-  document.getElementById('end-title').textContent=title;
-  document.getElementById('end-sub').textContent=sub;
+  var players=msg.players||S.lastPlayers||{}, reason=msg.reason||'unknown';
+  document.getElementById('end-icon').textContent=reason==='all_found'?'🏆':'⏰';
+  document.getElementById('end-title').textContent=reason==='all_found'?'Tous trouvés !':'Temps écoulé !';
+  document.getElementById('end-sub').textContent=reason==='all_found'?'Le chercheur a trouvé tout le monde !':'Les cachés ont survécu !';
   var list=document.getElementById('end-list'); list.innerHTML='';
-  // Classement : trouvés d'abord, puis cachés survivants
-  var found=(msg.foundLog||[]);
+  var found=msg.foundLog||[];
   var survivors=Object.values(players).filter(function(p){ return !p.isSeeker&&!p.isFound; });
   if(found.length){
-    var h=document.createElement('p'); h.style.cssText='font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;'; h.textContent='Trouvés'; list.appendChild(h);
+    var h=document.createElement('p'); h.style.cssText='font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;'; h.textContent='Trouvés'; list.appendChild(h);
     found.forEach(function(f,i){
       var col=playerColor(f.name), d=document.createElement('div'); d.className='player-item';
-      d.innerHTML='<span style="font-size:18px;width:28px;text-align:center">'+(i+1)+'.</span>'
-        +'<div class="pdot" style="background:'+col+'"></div>'
-        +'<span class="pname" style="color:'+col+'">'+f.name+'</span>';
+      d.innerHTML='<span style="font-size:16px;width:24px;text-align:center">'+(i+1)+'.</span><div class="pdot" style="background:'+col+'"></div><span class="pname" style="color:'+col+'">'+f.name+'</span>';
       list.appendChild(d);
     });
   }
   if(survivors.length){
-    var h2=document.createElement('p'); h2.style.cssText='font-size:11px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin:12px 0 8px;'; h2.textContent='Survivants 🏅'; list.appendChild(h2);
+    var h2=document.createElement('p'); h2.style.cssText='font-size:10px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin:12px 0 8px;'; h2.textContent='Survivants 🏅'; list.appendChild(h2);
     survivors.forEach(function(p){
       var col=playerColor(p.name), d=document.createElement('div'); d.className='player-item';
-      d.innerHTML='<span style="font-size:18px;width:28px;text-align:center">🙈</span>'
-        +'<div class="pdot" style="background:'+col+'"></div>'
-        +'<span class="pname" style="color:'+col+'">'+p.name+'</span>';
+      d.innerHTML='<span style="font-size:16px;width:24px;text-align:center">🙈</span><div class="pdot" style="background:'+col+'"></div><span class="pname" style="color:'+col+'">'+p.name+'</span>';
       list.appendChild(d);
     });
   }
   show('screen-end');
 }
 
-// ── MODAL TROUVER ─────────────────────────────────
+// ── MODAL ─────────────────────────────────────────
 function openModal(){ document.getElementById('modal-code').value=''; document.getElementById('modal-err').textContent=''; document.getElementById('find-modal').classList.add('open'); setTimeout(function(){ document.getElementById('modal-code').focus(); },100); }
 function closeModal(){ document.getElementById('find-modal').classList.remove('open'); }
 function validateFound(){
   var input=document.getElementById('modal-code').value.trim().toUpperCase();
   if(input.length!==4){ showErr('modal-err','Code à 4 caractères !'); return; }
-  send({ type:'found', code:S.code, secretCode:input });
-  closeModal();
+  send({ type:'found', code:S.code, secretCode:input }); closeModal();
 }
 
-// ── UTILS ─────────────────────────────────────────
-function formatTime(sec){ return Math.floor(sec/60).toString().padStart(2,'0')+':'+Math.floor(sec%60).toString().padStart(2,'0'); }
-
+// ── LEAVE ─────────────────────────────────────────
 function leaveGame(){
   clearInterval(S.timerPoll);
   if(S.watchId) navigator.geolocation.clearWatch(S.watchId);
-  if(S.map){ S.map.remove(); }
-  S={ code:null,name:null,isSeeker:false,startTime:null,settings:null,watchId:null,timerPoll:null,playerKey:null,secretCode:null,becameSeeker:false,powerUsed:false,powerBlocked:false,powerBlockedUntil:null,map:null,selfMarker:null,zoneCircle:null,playerMarkers:{},playerCircles:{},fakeMarkers:{},sabotageUsed:false,fakePlacing:false,fakeClickHandler:null,revealUntil:null,halveUntil:null,lastPlayers:{} };
+  if(S.map) S.map.remove();
+  S={ code:null,name:null,isSeeker:false,startTime:null,settings:null,watchId:null,timerPoll:null,playerKey:null,secretCode:null,becameSeeker:false,powerUsed:false,powerBlocked:false,powerBlockedUntil:null,map:null,selfMarker:null,zoneCircle:null,playerMarkers:{},playerCircles:{},fakeMarkers:{},sabotageUsed:false,fakePlacing:false,fakeClickHandler:null,revealUntil:null,halveUntil:null,lastPlayers:{},myLat:null,myLng:null };
   playerColors={}; colorIdx=0;
+  paliers=[{dur:10,radius:500}]; renderPaliers();
   show('screen-home');
 }
 
